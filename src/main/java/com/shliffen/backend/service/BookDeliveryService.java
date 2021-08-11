@@ -1,7 +1,6 @@
 package com.shliffen.backend.service;
 
 import com.shliffen.backend.model.BookingDeliveryData;
-import com.shliffen.backend.model.dto.DeliveryDto;
 import com.shliffen.backend.reporsitory.AddressRepository;
 import com.shliffen.backend.reporsitory.DeliveriesRepository;
 import com.shliffen.backend.reporsitory.TimeSlotsRepository;
@@ -35,22 +34,21 @@ public class BookDeliveryService {
     private TaskExecutor taskExecutor;
     @Autowired
     private ApplicationContext applicationContext;
-    private BlockingQueue<DeliveryDto> deliveryDtosQueue = new LinkedBlockingDeque<>();
-    private BlockingQueue<BookingDeliveryData> deliveryDtosQueue2 = new LinkedBlockingDeque<>();
+    //private BlockingQueue<DeliveryDto> deliveryDtosQueue = new LinkedBlockingDeque<>();
+    private BlockingQueue<BookingDeliveryData> bookingDeliveriesQueue = new LinkedBlockingDeque<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookDeliveryService.class);
 
     @Async
-    public void addTimeslotBookingToQueue(DeliveryDto deliveryDto) {
-        LOGGER.info("Booking new timeslot for delivery to queue " + deliveryDto);
-        deliveryDtosQueue.add(deliveryDto);
-        deliveryDtosQueue2.add(bookingDeliveryData);
+    public void addTimeslotBookingToQueue(BookingDeliveryData bookingDeliveryData) {
+        LOGGER.info("Booking new timeslot for delivery to queue " + bookingDeliveryData);
+        bookingDeliveriesQueue.add(bookingDeliveryData);
     }
 
     @Async
-    public void addTimeslotsBookingToQueue(List<DeliveryDto> deliveryDtoList) {
-        LOGGER.info("Adding new timeslots for delivery to queue " + deliveryDtoList);
-        deliveryDtosQueue.addAll(deliveryDtoList);
+    public void addTimeslotsBookingToQueue(List<BookingDeliveryData> listOfBookingDeliveries) {
+        LOGGER.info("Adding new timeslots for delivery to queue " + listOfBookingDeliveries);
+        bookingDeliveriesQueue.addAll(listOfBookingDeliveries);
     }
 
     @Lookup
@@ -85,7 +83,7 @@ public class BookDeliveryService {
      */
     public void startProcessing() {
         var bookingTimeslotTask = createBookingTimeslotTask();
-        bookingTimeslotTask.setProcessingQueue(deliveryDtosQueue);
+        bookingTimeslotTask.setProcessingQueue(bookingDeliveriesQueue);
         taskExecutor.execute(bookingTimeslotTask);
     }
 

@@ -1,10 +1,8 @@
 package com.shliffen.backend.service.tasks;
 
-import com.shliffen.backend.model.Delivery;
+import com.shliffen.backend.model.BookingDeliveryData;
 import com.shliffen.backend.model.Status;
-import com.shliffen.backend.model.dto.DeliveryDto;
 import com.shliffen.backend.reporsitory.ApplicationsForBookingRepository;
-import com.shliffen.backend.reporsitory.DeliveriesRepository;
 import com.shliffen.backend.service.BookDeliveryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +27,7 @@ public class RecoveryTask implements Runnable {
         Thread.currentThread().setName("TimeslotBookingRecoveryThread");
         while(!Thread.currentThread().isInterrupted()) {
             LOGGER.info("Starting Timeslots booking recovery from database");
-            List<DeliveryDto> notProcessedTimeslotBookings = findNotProcessedDeliveries();
+            List<BookingDeliveryData> notProcessedTimeslotBookings = findNotProcessedDeliveries();
             if (notProcessedTimeslotBookings != null && !notProcessedTimeslotBookings.isEmpty()) {
                 LOGGER.info("Found total " + notProcessedTimeslotBookings.size() + " unprocessed bookings");
                 LOGGER.info("Adding not processed bookings to processing queue...");
@@ -40,7 +38,7 @@ public class RecoveryTask implements Runnable {
         LOGGER.info("Recovery finished");
     }
 
-    private List<DeliveryDto> findNotProcessedDeliveries() {
+    private List<BookingDeliveryData> findNotProcessedDeliveries() {
         return applicationsForBookingRepository.findAllByStatus(Status.NEW);
     }
 }

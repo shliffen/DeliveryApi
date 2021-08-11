@@ -1,6 +1,5 @@
 package com.shliffen.backend.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shliffen.backend.model.BookingDeliveryData;
 import com.shliffen.backend.model.Delivery;
 import com.shliffen.backend.model.Status;
@@ -9,6 +8,7 @@ import com.shliffen.backend.model.dto.DeliveryDto;
 import com.shliffen.backend.reporsitory.DeliveriesRepository;
 import com.shliffen.backend.reporsitory.TimeSlotsRepository;
 import com.shliffen.backend.service.BookDeliveryService;
+import com.shliffen.backend.service.BookingDeliveryModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,14 +33,18 @@ public class DeliveriesController {
     private TimeSlotsRepository timeSlotsRepository;
     @Autowired
     BookDeliveryService bookDeliveryService;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final BookingDeliveryModelMapper bookingDeliveryModelMapper;
+
+    public DeliveriesController(BookingDeliveryModelMapper bookingDeliveryModelMapper) {
+        this.bookingDeliveryModelMapper = bookingDeliveryModelMapper;
+    }
+
 
     @PostMapping("/deliveries")
     public Object BookDelivery(@Valid @RequestBody DeliveryDto deliveryDto) {
         try {
-            BookingDeliveryData bookingDeliveryData =  objectMapper.readValue(deliveryDto, BookingDeliveryData.class);
+            BookingDeliveryData bookingDeliveryData =  bookingDeliveryModelMapper.toEntity(deliveryDto);
             bookDeliveryService.addTimeslotBookingToQueue(bookingDeliveryData);
-            bookDeliveryService.addTimeslotBookingToQueue(deliveryDto);
             return new ResponseEntity<>("Timeslot booked successfully",HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>("Sorry, you can't book delivery for this day", HttpStatus.CONFLICT);

@@ -1,9 +1,9 @@
 package com.shliffen.backend.service.tasks;
 
+import com.shliffen.backend.model.BookingDeliveryData;
 import com.shliffen.backend.model.Delivery;
 import com.shliffen.backend.model.Status;
 import com.shliffen.backend.model.Timeslot;
-import com.shliffen.backend.model.dto.DeliveryDto;
 import com.shliffen.backend.reporsitory.DeliveriesRepository;
 import com.shliffen.backend.reporsitory.TimeSlotsRepository;
 import org.slf4j.Logger;
@@ -27,39 +27,38 @@ public class BookingTimeslotTask implements Runnable  {
     TimeSlotsRepository timeSlotsRepository;
     @Autowired
     DeliveriesRepository deliveriesRepository;
-    private BlockingQueue<DeliveryDto> processingQueue;
+    private BlockingQueue<BookingDeliveryData> processingQueue;
     private static final Logger LOGGER = LoggerFactory.getLogger(BookingTimeslotTask.class);
-
 
     @Override
     public void run() {
         Thread.currentThread().setName("TimeslotBookingProcessingThread");
         LOGGER.info("Starting processing thread");
         while (!Thread.currentThread().isInterrupted()) {
-            DeliveryDto deliveryDtoProcess = null;
+            BookingDeliveryData bookingDeliveryData = null;
             Delivery deliveryForBooking = new Delivery();
             try {
-                deliveryDtoProcess = processingQueue.take();
+                bookingDeliveryData = processingQueue.take();
                 LOGGER.info("Started processing new booking ");
-                boolean isValidTimeslot = checkTimeslotExist(deliveryDtoProcess);
+                boolean isValidTimeslot = checkTimeslotExist(bookingDeliveryData);
                 if (!isValidTimeslot) {
-                    LOGGER.info("Unknown TimeslotId=" + deliveryDtoProcess.getTimeslotID());
+                    LOGGER.info("Unknown TimeslotId=" + bookingDeliveryData.getTimeslotID());
                 }
                 Timeslot timeslot =
-                        timeSlotsRepository.findTimeslotById(Long.parseLong(deliveryDtoProcess.getTimeslotID()));
-                var canBePlaced = checkTimeslotExist(deliveryDtoProcess)&&(checkBookingPossibility(timeslot));
+                        timeSlotsRepository.findTimeslotById(Long.parseLong(bookingDeliveryData.getTimeslotID()));
+                var canBePlaced = checkTimeslotExist(bookingDeliveryData)&&(checkBookingPossibility(timeslot));
                 if (canBePlaced){
                     if (timeslot.getFirstDeliveryOwner().isEmpty()) {
-                        timeslot.setFirstDeliveryOwner(deliveryDtoProcess.getUser());
-                        timeslotAndDeliveryBooking(timeslot,deliveryDtoProcess,deliveryForBooking);
+                        timeslot.setFirstDeliveryOwner(bookingDeliveryData.getUser());
+                        timeslotAndDeliveryBooking(timeslot,bookingDeliveryData,deliveryForBooking);
                     } else if (timeslot.getSecondDeliveryOwner().isEmpty()) {
-                        timeslot.setSecondDeliveryOwner(deliveryDtoProcess.getUser());
-                        timeslotAndDeliveryBooking(timeslot,deliveryDtoProcess,deliveryForBooking);
+                        timeslot.setSecondDeliveryOwner(bookingDeliveryData.getUser());
+                        timeslotAndDeliveryBooking(timeslot,bookingDeliveryData,deliveryForBooking);
                     }
                 }
             } catch (NoSuchElementException e){
                 LOGGER.error(e.getMessage());
-                LOGGER.info("Timeslot booking REJECTED!" + deliveryDtoProcess);
+                LOGGER.info("Timeslot booking REJECTED!" + bookingDeliveryData);
                 throw new NoSuchElementException();
             } catch (InterruptedException e) {
                 LOGGER.error("Processing interrupted", e);
@@ -71,8 +70,8 @@ public class BookingTimeslotTask implements Runnable  {
 
     }
 
-    private boolean checkTimeslotExist(DeliveryDto deliveryDto) {
-        Timeslot timeslot = timeSlotsRepository.findTimeslotById(Long.parseLong(deliveryDto.getTimeslotID()));
+    private boolean checkTimeslotExist(BookingDeliveryData bookingDeliveryData) {
+        Timeslot timeslot = timeSlotsRepository.findTimeslotById(Long.parseLong(bookingDeliveryData.getTimeslotID()));
         return timeslot != null;
     }
 
@@ -98,22 +97,22 @@ public class BookingTimeslotTask implements Runnable  {
         return resultList;
     }
 
-    public BlockingQueue<DeliveryDto> getProcessingQueue() {
+    public BlockingQueue<BookingDeliveryData> getProcessingQueue() {
         return processingQueue;
     }
 
     public void setProcessingQueue(
-            BlockingQueue<DeliveryDto> processingQueue) {
+            BlockingQueue<BookingDeliveryData> processingQueue) {
         this.processingQueue = processingQueue;
     }
 
-    private void timeslotAndDeliveryBooking(Timeslot timeslot, DeliveryDto deliveryDtoProcess, Delivery deliveryForBooking){
+    private void timeslotAndDeliveryBooking(Timeslot timeslot, BookingDeliveryData bookingDeliveryData, Delivery deliveryForBooking){
         deliveryForBooking.setTimeslot(timeslot);
         deliveryForBooking.setStatus(Status.ORDERED);
-        deliveryForBooking.setDeliveryOwner(deliveryDtoProcess.getUser());
+        deliveryForBooking.setDeliveryOwner(bookingDeliveryData.getUser());
         deliveriesRepository.save(deliveryForBooking);
         LOGGER.info("Finished booking timeslot for delivery" + deliveryForBooking);
-        deliveryDtoProcess.setStatus(Status.ORDERED);
+        bookingDeliveryData.setStatus(Status.ORDERED);
     }
 
 }

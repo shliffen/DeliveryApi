@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+/**
+ * Making a configuration for booking deliveries in parallel. Used ThreadPoolTaskExecutor() with base size of 2
+ * Threads and maximal as 10 threads in parallel.
+ */
 @Configuration
 public class ThreadConfig {
 

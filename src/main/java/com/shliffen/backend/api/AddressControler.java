@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for receiving a non-formatted address lines and checking is it possible to make delivery to  address
+ */
 @RestController
 public class AddressControler {
 
@@ -19,6 +22,12 @@ public class AddressControler {
 
     GoogleMapService googleMapService = new GoogleMapService();
 
+    /**
+     * resolves a single line address into a structured one, which should be resolved from Google Maps
+     * @param addressDto - non-structured address line
+     * @return ResponseEntity with status of formatting Address Line (can or cannot be resolved, not supported for
+     * delivery)
+     */
     @PostMapping("/resolve-address")
     public Object resolveAddress(@RequestBody AddressDto addressDto) {
             String formattedAddress = googleMapService.getFormattedAddress(addressDto.getSearchTerm());

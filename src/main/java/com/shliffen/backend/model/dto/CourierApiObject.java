@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * Structure for getting available timeslots for the next week in CourierAPI
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

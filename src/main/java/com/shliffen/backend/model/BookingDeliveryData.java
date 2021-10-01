@@ -11,6 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * Structure for Booking Deliveries by Clients. It is an intermediate structure used, among other things,
+ * to avoid conflicts when using multithreading.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

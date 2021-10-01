@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 
+
 @RestController
 public class DeliveriesController {
 
@@ -38,7 +39,6 @@ public class DeliveriesController {
     public DeliveriesController(BookingDeliveryModelMapper bookingDeliveryModelMapper) {
         this.bookingDeliveryModelMapper = bookingDeliveryModelMapper;
     }
-
 
     @PostMapping("/deliveries")
     public Object BookDelivery(@Valid @RequestBody DeliveryDto deliveryDto) {

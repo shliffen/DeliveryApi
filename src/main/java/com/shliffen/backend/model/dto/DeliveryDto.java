@@ -9,6 +9,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * Structure used for getting data from user for booking delivery in DeliveriesController
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

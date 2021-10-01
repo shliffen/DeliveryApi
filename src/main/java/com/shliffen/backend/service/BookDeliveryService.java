@@ -34,7 +34,6 @@ public class BookDeliveryService {
     private TaskExecutor taskExecutor;
     @Autowired
     private ApplicationContext applicationContext;
-    //private BlockingQueue<DeliveryDto> deliveryDtosQueue = new LinkedBlockingDeque<>();
     private BlockingQueue<BookingDeliveryData> bookingDeliveriesQueue = new LinkedBlockingDeque<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(BookDeliveryService.class);

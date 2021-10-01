@@ -19,8 +19,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Controller responsible for getting data from couriers about next week available timeslots for deliveries
+ */
 @RestController
-public class CourierApi {
+public class CourierApiController {
 
     @Autowired
     TimeSlotsRepository timeSlotsRepository;
@@ -29,7 +32,12 @@ public class CourierApi {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private SimpleDateFormat simpleFormat = new SimpleDateFormat("dd-MM-yyyy");
 
-
+    /**
+     * Uses for set available timeslots for the next week.
+     * Gets on input json file with the available timeslots for the upcoming week
+     * @param courierApiObject - data from json-file about available timeslots for the next week
+     * @return ResponseEntity with message is there every timeslot was saved to DB
+     */
     @PostMapping("/courier/set/timeslots")
     public Object setAvailableTimeslots(@RequestBody CourierApiObject courierApiObject) {
         List<LocalDate> holidays = holidayApiService.getHolidays();

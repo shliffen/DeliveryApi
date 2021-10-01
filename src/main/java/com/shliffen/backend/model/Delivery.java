@@ -6,9 +6,12 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Structure which contains information about delivery. Unique ID, current Status of Delivery, current Timeslot, and
+ * Delivery Owner's name.
+ */
 @Setter
 @Getter
-//@Table(name = "delivery")
 @Entity
 @NoArgsConstructor
 public class Delivery {
@@ -18,9 +21,7 @@ public class Delivery {
     private Long id;
     private Status status = Status.NEW;
     @OneToOne
-    @JoinColumn(name = "timeslot_id", nullable = false)
+    @JoinColumn(name = "TimeslotId", nullable = false)
     private Timeslot timeslot;
-
     private String deliveryOwner;
-
 }

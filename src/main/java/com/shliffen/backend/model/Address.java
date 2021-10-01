@@ -7,12 +7,14 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+/**
+ * Structure that keep Address in formatted form (by Google Maps Service)
+ */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-//@Table(name = "address")
 public class Address {
 
     @Id

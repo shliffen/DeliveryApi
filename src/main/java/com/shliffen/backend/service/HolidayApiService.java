@@ -14,6 +14,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Using HolidayAPI for checking holidays for desirable country
+ * It's used for do not set timeslots for deliveries to the holidays
+ */
 @Service
 public class HolidayApiService {
 

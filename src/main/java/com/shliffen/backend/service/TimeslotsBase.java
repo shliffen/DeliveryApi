@@ -67,6 +67,10 @@ public class TimeslotsBase {
         return date;
     }
 
+    /**
+     * Method for set 10 available timeslots per day, if there is no json from CourierAPI
+     * @param dayForTimeslots
+     */
     private void newTimeslotsForDay(String dayForTimeslots) {
         try {
             List<Timeslot> list = new ArrayList<>();

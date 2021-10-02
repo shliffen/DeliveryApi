@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
+/**
+ * Responsible controller for getting available timeslots
+ */
 @RestController
 public class TimeslotsController {
 
@@ -18,6 +21,11 @@ public class TimeslotsController {
     AddressRepository addressRepository;
     GoogleMapService mapService = new GoogleMapService();
 
+    /**
+     * Request all available timeslots for formatted address
+     * @param formattedAddress Address for request available timeslots
+     * @return ResponseEntity with body which exist or List of available timeslots or message that address doesn't exist
+     */
     @PostMapping("/timeslots")
     public Object resolveTimeslots(@RequestBody String formattedAddress) {
         if (mapService.checkIsAddressExists(formattedAddress)){

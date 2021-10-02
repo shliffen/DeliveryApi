@@ -23,7 +23,9 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 
-
+/**
+ * Controller responsible for request of data about deliveries
+ */
 @RestController
 public class DeliveriesController {
 
@@ -36,10 +38,19 @@ public class DeliveriesController {
     BookDeliveryService bookDeliveryService;
     private final BookingDeliveryModelMapper bookingDeliveryModelMapper;
 
+    /**
+     * Initialization of Mapper for transition from DTO to Entity
+     * @param bookingDeliveryModelMapper instance of BookingDeliveryModelMapper
+     */
     public DeliveriesController(BookingDeliveryModelMapper bookingDeliveryModelMapper) {
         this.bookingDeliveryModelMapper = bookingDeliveryModelMapper;
     }
 
+    /**
+     * Trying to book a delivery to desirable Timeslot
+     * @param deliveryDto Data from user (in JSON format) with Username and timeslotID
+     * @return ResponseEntity with Status of operation - OK or Issue Message
+     */
     @PostMapping("/deliveries")
     public Object BookDelivery(@Valid @RequestBody DeliveryDto deliveryDto) {
         try {
@@ -51,6 +62,11 @@ public class DeliveriesController {
         }
     }
 
+    /**
+     * Mark delivery with id DELIVERY_ID as Completed
+     * @param DELIVERY_ID - id of desirable delivery, which we want to mark as complete
+     * @return ResponseEntity with Status of operation - OK or Issue Message
+     */
     @PostMapping("/deliveries/{DELIVERY_ID}/complete")
     public Object MarkDeliveryAsCompleted(@PathVariable String DELIVERY_ID) {
         Delivery delivery = deliveriesRepository.findById(DELIVERY_ID).orElse(null);
@@ -62,6 +78,11 @@ public class DeliveriesController {
                                            HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Cancellation of delivery by ID
+     * @param DELIVERY_ID - id of desirable delivery, which we want to cancel
+     * @return ResponseEntity with Status of operation - OK or Issue Message
+     */
     @DeleteMapping("/deliveries/{DELIVERY_ID}")
     public Object cancellationDelivery(@PathVariable String DELIVERY_ID) {
         if (deliveriesRepository.existsById(DELIVERY_ID)) {
@@ -78,11 +99,19 @@ public class DeliveriesController {
                                            HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Request for getting today's deliveries
+     * @return ResponseEntity with List of Deliveries in body
+     */
     @GetMapping("/deliveries/daily")
     public Object retrieveTodaysDeliveries() {
         return new ResponseEntity<>(getDayDeliveries(LocalDate.now()), HttpStatus.OK);
     }
 
+    /**
+     * Request all deliveries for current week
+     * @return ResponseEntity with List of Deliveries in body
+     */
     @GetMapping("/deliveries/weekly")
     public Object resolveWeekDeliveries() {
         Date currentDate = convertToDateViaInstant(LocalDate.now());
@@ -93,6 +122,11 @@ public class DeliveriesController {
         return new ResponseEntity<>(resultList, HttpStatus.OK);
     }
 
+    /**
+     * Get list of all deliveries for desirable date
+     * @param date desirable date for getting deliveries
+     * @return List of Delivery objects for desirable date
+     */
     private List<Delivery>getDayDeliveries(LocalDate date){
         List<Delivery> resultList = new ArrayList<>();
         List<Delivery> allDeliveries = deliveriesRepository.findAll();
@@ -105,6 +139,11 @@ public class DeliveriesController {
         return resultList;
     }
 
+    /**
+     * Getting all Days (in LocalDate format) of the current|desirable week
+     * @param refDate desirable date, inside the week. Due to API used in Israel we start the week from Sunday
+     * @return array of LocalDate objects
+     */
     private LocalDate[] getDaysOfWeek(Date refDate) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(refDate);
@@ -117,10 +156,20 @@ public class DeliveriesController {
         return daysOfWeek;
     }
 
+    /**
+     * Method for transform Date object to LocalDate format object
+     * @param dateToConvert Date object to convert
+     * @return LocalDate object as a result of conversion
+     */
     private LocalDate convertToLocalDateViaInstant(Date dateToConvert) {
         return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
+    /**
+     * Method for transform LocalDate object to Date format object
+     * @param dateToConvert LocalDate object to convert
+     * @return Date object as a result of conversion
+     */
     private Date convertToDateViaInstant(LocalDate dateToConvert) {
         return java.util.Date.from(dateToConvert.atStartOfDay()
                                                 .atZone(ZoneId.systemDefault())

@@ -6,6 +6,10 @@ import org.modelmapper.ModelMapper;
 
 import java.util.Objects;
 
+
+/**
+ * Class realization of ModelMapper for mapping process from Dto to Entity there and back
+ */
 public class BookingDeliveryModelMapper {
 
     private final ModelMapper mapper;

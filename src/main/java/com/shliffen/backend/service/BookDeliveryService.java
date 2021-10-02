@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+/**
+ * The main service class for handling booking streams and data recovery streams
+ */
 @Service
 public class BookDeliveryService {
 

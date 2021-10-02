@@ -12,6 +12,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+/**
+ * Thread for Recovery data with Booking requests, after trouble on client|server|connection side
+ */
 @Component
 @Scope("prototype")
 public class RecoveryTask implements Runnable {
@@ -38,6 +41,10 @@ public class RecoveryTask implements Runnable {
         LOGGER.info("Recovery finished");
     }
 
+    /**
+     * Searching Deliveries which was made (with starting status NEW) but not processed (with status ORDERED)
+     * @return
+     */
     private List<BookingDeliveryData> findNotProcessedDeliveries() {
         return applicationsForBookingRepository.findAllByStatus(Status.NEW);
     }

@@ -18,6 +18,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingQueue;
 
+/**
+ * Thread for Booking deliveries. Uses the BlockingQueue for implementing multi-threaded delivery booking and
+ * solving the problem of simultaneous booking
+ */
 @Component
 @Scope("prototype")
 public class BookingTimeslotTask implements Runnable  {
@@ -75,6 +79,12 @@ public class BookingTimeslotTask implements Runnable  {
         return timeslot != null;
     }
 
+    /**
+     * Checking is it possible to Book desirable timeslot, by checking Owners fields and that there is less than 10
+     * deliveries booked to that day
+     * @param timeslot desirable timeslot
+     * @return true|false is it possible to book delivery for this timeslot
+     */
     private boolean checkBookingPossibility(Timeslot timeslot){
         boolean emptyFieldOwner = false;
         if ((timeslot.getFirstDeliveryOwner().isEmpty()) || (timeslot.getSecondDeliveryOwner().isEmpty())){
@@ -85,6 +95,11 @@ public class BookingTimeslotTask implements Runnable  {
         return (emptyFieldOwner) && (quantityOfDeliveriesOfSameWithTimeSlotDay < 10);
     }
 
+    /**
+     * Getting all deliveries for desirable day
+     * @param date - date for getting list of deliveries
+     * @return list of Delivery objects for desirable date
+     */
     private List<Delivery> getDayDeliveries(LocalDate date){
         List<Delivery> resultList = new ArrayList<>();
         List<Delivery> allDeliveries = deliveriesRepository.findAll();
@@ -106,6 +121,12 @@ public class BookingTimeslotTask implements Runnable  {
         this.processingQueue = processingQueue;
     }
 
+    /**
+     * Final stage of booking timeslot which will be just in the end of run() method
+     * @param timeslot
+     * @param bookingDeliveryData
+     * @param deliveryForBooking
+     */
     private void timeslotAndDeliveryBooking(Timeslot timeslot, BookingDeliveryData bookingDeliveryData, Delivery deliveryForBooking){
         deliveryForBooking.setTimeslot(timeslot);
         deliveryForBooking.setStatus(Status.ORDERED);

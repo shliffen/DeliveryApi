@@ -18,6 +18,7 @@ import javax.persistence.Id;
 public class DeliveryDto {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @JsonProperty("user")

@@ -7,9 +7,13 @@ import com.google.maps.model.GeocodingResult;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Google Map service realization for getting formatted Address and checking is this address exist
+ */
 @Service
 public class GoogleMapService {
 
+    // sure it's a fake key =)
     @Value("${googleGeocodeAPIKey}")
     private String apiKey;
 

@@ -80,7 +80,7 @@ public class BookingTimeslotTask implements Runnable  {
     }
 
     /**
-     * Checking is it possible to Book desirable timeslot, by checking Owners fields and that there is less than 10
+     * Checking is it possible to Book desirable timeslot, by checking Owners fields and that there is less than 16
      * deliveries booked to that day
      * @param timeslot desirable timeslot
      * @return true|false is it possible to book delivery for this timeslot
@@ -92,7 +92,7 @@ public class BookingTimeslotTask implements Runnable  {
         }
         int quantityOfDeliveriesOfSameWithTimeSlotDay =
                 getDayDeliveries(timeslot.getStartTime()).size();
-        return (emptyFieldOwner) && (quantityOfDeliveriesOfSameWithTimeSlotDay < 10);
+        return (emptyFieldOwner) && (quantityOfDeliveriesOfSameWithTimeSlotDay < 16);
     }
 
     /**

@@ -1,4 +1,4 @@
-# DeliveryApi
+# Delivery Api Service
 Simple Delivery Service with API, Multithreading, Geocoding by GoogleMaps and checks holidays by HolidayAPI
 
 A simple example of an Order and Delivery processing service has been implemented, taking into account multithreading and work with different APIs inside.

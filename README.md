@@ -32,4 +32,5 @@ Implemented some features of GoogleMaps geocoding and HolidaysAPI.
 * POST /courier/set/timeslots - send a list with available timeslots for the next week
 
 **Technologies used**
+    
 Java + Maven + Spring Boot MVC + REST + H2 (as Database) + Hibernate + Lombok + HolidayAPI + GoogleMaps geocoding

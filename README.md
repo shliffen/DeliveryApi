@@ -1,5 +1,5 @@
 # Delivery Api Service
-Simple Delivery Service with API, Multithreading, Geocoding by GoogleMaps and checks holidays by HolidayAPI
+Sample Delivery Service with API, Multithreading, Geocoding by GoogleMaps and checks holidays by HolidayAPI
 
 A simple example of an Order and Delivery processing service has been implemented, taking into account multithreading and work with different APIs inside.
 The service is implemented in JAVA using Spring Boot and REST. H2 acts as a database, and interaction with it is performed using Hibernate.
